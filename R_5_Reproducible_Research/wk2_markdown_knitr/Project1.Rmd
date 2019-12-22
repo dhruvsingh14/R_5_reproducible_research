@@ -1,0 +1,31 @@
+---
+title: "Project 1 -- Step Tracker"
+author: "Me, Dhruv Singh"
+date: "December 21, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Setting Directory
+
+```{r dir}
+getwd()
+setwd("C:/Dhruv/misc/data/R_5_Reproducible_Research/wk2_markdown_knitr")
+```
+
+## Reading in Data
+Data on step tracker being read in:
+```{r data}
+x <- read.csv("activity.csv")
+```
+
+
+
+
+```{r data}
+plot(pressure)
+```
+
