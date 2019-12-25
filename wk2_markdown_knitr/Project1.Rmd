@@ -1,31 +1,112 @@
 ---
 title: "Project 1 -- Step Tracker"
 author: "Me, Dhruv Singh"
-date: "December 21, 2019"
+date: "December 23, 2019"
 output: html_document
 ---
 
+## PART 0: SETUP
+echo settings for embedding code
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Setting Directory
-
+Setting Directory
 ```{r dir}
 getwd()
 setwd("C:/Dhruv/misc/data/R_5_Reproducible_Research/wk2_markdown_knitr")
 ```
 
-## Reading in Data
-Data on step tracker being read in:
+## PART I: PREPROCESSING DATA
+Reading in step tracker csv:
 ```{r data}
-x <- read.csv("activity.csv")
+step_tracker <- read.csv("activity.csv")
 ```
 
+Total daily steps:
+(missing values ommitted)
+```{r total daily steps}
+# loading up necessary packages
+
+# install.packages("lubridate", repos='http://cran.us.r-project.org')
+library(lubridate)
+library(ggplot2)
+
+
+str(step_tracker)
+
+# converting date format for easier calculations
+step_tracker$date <- as.Date(step_tracker$date)
+
+# aggregating daily steps
+daily_aggregates <- na.omit(step_tracker)
+str(daily_aggregates)
+daily_aggregates <- aggregate(steps ~ date, daily_aggregates, FUN = sum)
+```
+
+Plotting histogram of daily steps taken:
+```{r hist daily}
+# plotting histogram of daily aggregates
+daily_steps <- ggplot(daily_aggregates, aes(x = steps)) + geom_histogram()
+daily_steps
+
+```
+
+Mean and median daily steps:
+```{r central tendency stats}
+# summarizing daily steps trends
+summary(daily_aggregates$steps)
+```
+Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 41    8841   10765   10766   13294   21194
+
+
+Time series data processing:
+```{r time series}
+# tracking total step trends over time
+time_series <- na.omit(step_tracker)
+
+# preparing daily means
+daily_averages <- na.omit(step_tracker)
+daily_averages <- aggregate(steps ~ date, daily_averages, FUN = mean)
+
+# renaming mean steps column
+names(daily_averages)[2] <- "steps_mean"
+```
+
+Preparing data for plotting
+```{r time series dataframe}
+# creating time series data frame
+time_series <- merge(time_series, daily_averages, by = 'date')
+rm(daily_averages)
+
+# producing time series plot
+trend_lines <- ggplot(time_series, aes(x = date, y = steps_mean)) + geom_line()
+trend_lines
+```
+
+Preparing data for identifying max mean interval
+```{r calculating max mean steps in a day}
+# subsetting to rows having highest number of average daily steps
+max <- time_series[time_series$steps_mean == max(time_series$steps_mean),]
+
+# printing intervals with highest avg steps
+max[max$steps == max(max$steps),]
+
+# we find interval 1520 and 1530 have the highest average daily steps
+```
+            date steps interval steps_mean
+13433 2012-11-23   760     1520   73.59028
+13435 2012-11-23   760     1530   73.59028
 
 
 
-```{r data}
-plot(pressure)
+## PART III: IMPUTATION
+
+Preparing data for mean substitution
+```{r imputing}
+
+
+
 ```
 
