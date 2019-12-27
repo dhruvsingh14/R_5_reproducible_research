@@ -15,42 +15,48 @@ In order to do so, it treats fatalities and injuries as indicators of damage to 
 
 ## PART 0: SETUP
 echo settings for embedding code
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 Setting Directory
-```{r dir}
+
+```r
 getwd()
+```
+
+```
+## [1] "C:/Dhruv/misc/data/R_5_reproducible_research/wk4_documenting"
+```
+
+```r
 setwd("C:/Dhruv/misc/data/R_5_reproducible_research/wk4_documenting")
 ```
 
 ## PART I: PREPROCESSING DATA
 Reading in strom data csv bz2:
-```{r data}
+
+```r
 storm_data <- read.csv("repdata_data_StormData.csv.bz2")
 ```
 
 Loading up necessary packages:
-```{r packages}
+
+```r
 # install.packages("knitr", repos='http://cran.us.r-project.org')
 # install.packages("rsconnect", repos='http://cran.us.r-project.org')
-install.packages("rmarkdown", repos='http://cran.us.r-project.org')
-install.packages("markdown", repos='http://cran.us.r-project.org')
-library(rmarkdown)
-library(markdown)
 library(knitr)
 library(ggplot2)
 library(rsconnect)
 ```
 
 Converting data type for categorical analysis:
-```{r data type}
+
+```r
 storm_data$EVTYPE <- as.character(storm_data$EVTYPE)
 ```
 
 Aggregating data to produce summary plots:
-```{r aggregating}
+
+```r
 storm_agg <- aggregate(FATALITIES ~ EVTYPE, storm_data, FUN = sum)
 # subsetting to only the highest damage incidents
 storm_agg <- storm_agg[storm_agg$FATALITIES > 100 ,]
@@ -59,12 +65,12 @@ storm_agg <- storm_agg[storm_agg$FATALITIES > 100 ,]
 storm_agg2 <- aggregate(PROPDMG ~ EVTYPE, storm_data, FUN = sum)
 # subsetting to only the highest damage incidents
 storm_agg2 <- storm_agg2[storm_agg2$PROPDMG > 26000 ,]
-
 ```
 
 ## PART II: RESULTS
 Relevant plots for human damage:
-```{r plots}
+
+```r
 # building plot
 highest_mortality <- ggplot(storm_agg, aes(x = storm_agg$EVTYPE, y = storm_agg$FATALITIES)) + 
   geom_bar(stat = "identity", fill = "steelblue") + labs(x = "Event Type", y = "Fatalities", title = "Fatalities by Event Type") + 
@@ -74,10 +80,13 @@ highest_mortality <- ggplot(storm_agg, aes(x = storm_agg$EVTYPE, y = storm_agg$F
 highest_mortality
 ```
 
+![plot of chunk plots](figure/plots-1.png)
+
 In the results we find that the most damaging natural disasters include Tornados and Excessive Heat, followed by Flash Floods and Lightening. All of which contain an element of unpredictability, but can be foreseen when regular inclement weather takes on more menacing features. And should therefore be safeguarded against.
 
 Relevant plots for property damage:
-```{r plots econ}
+
+```r
 # building plot
 highest_prop.loss <- ggplot(storm_agg2, aes(x = storm_agg2$EVTYPE, y = storm_agg2$PROPDMG)) + 
   geom_bar(stat = "identity", fill = "steelblue") + labs(x = "Event Type", y = "Property Damage", title = "Property Damage by Event Type") + 
@@ -87,15 +96,30 @@ highest_prop.loss <- ggplot(storm_agg2, aes(x = storm_agg2$EVTYPE, y = storm_agg
 highest_prop.loss
 ```
 
+![plot of chunk plots econ](figure/plots econ-1.png)
+
 Once again, we find that Tornados and Flash Floods cause the greatest damage to property, followed by what is abbreviated as TSTM Wonds!
 
 Relevant tables:
-```{r tables}
+
+```r
 # producing table of overall stats
 summary(storm_data$FATALITIES)
+```
 
+```
+##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+##   0.0000   0.0000   0.0000   0.0168   0.0000 583.0000
+```
+
+```r
 # tabulating damage stats
 summary(storm_data$PROPDMG)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    0.00    0.00    0.00   12.06    0.50 5000.00
 ```
 # fatalities stats
   Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
@@ -106,8 +130,8 @@ Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
 0.00    0.00    0.00   12.06    0.50 5000.00
 
 
-```{r knitting}
-knit("C:/Dhruv/misc/data/R_5_reproducible_research/wk4_documenting/Project2.Rmd",output="C:/Dhruv/misc/data/R_5_reproducible_research/wk4_documenting/Project2.pdf")
 
+```r
+# knit("C:/Dhruv/misc/data/R_5_reproducible_research/wk4_documenting/Project2.Rmd",output="C:/Dhruv/misc/data/R_5_reproducible_research/wk4_documenting/Project2.html")
 ```
 
